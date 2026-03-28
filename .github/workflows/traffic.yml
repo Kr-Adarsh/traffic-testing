@@ -44,7 +44,7 @@ jobs:
             git worktree add -b analytics ../analytics origin/analytics
           else
             echo "analytics branch missing — creating orphan"
-            git worktree add --orphan ../analytics analytics
+            git worktree add --orphan -b analytics ../analytics
           fi
 
           mkdir -p ../analytics/traffic
