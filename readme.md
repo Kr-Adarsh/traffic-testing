@@ -16,11 +16,17 @@ A workflow runs every day at 00:15 UTC, fetches your repo's clone and view stats
 
 ---
 
-## setup (5 mins)
+## Setup (5 mins)
 
 ### 1. Firstly add files:
 
 Drop these three files into your repo's **default branch**:
+
+Direct files download: [Core files](https://github.com/Kr-Adarsh/git-traffic-log/releases/download/v1.0/git-traffic-logger.zip)
+
+Manually:
+
+     .github/workflows/traffic.yml
 
 ```
 your-repo/
