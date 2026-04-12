@@ -19,16 +19,14 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install requests
+        run: pip install -r requirements.txt
 
-      - name: Fetch and store traffic
+      - name: Fetch and store traffic (all repos)
         env:
           TRAFFIC_TOKEN: ${{ secrets.TRAFFIC_TOKEN }}
-          TRAFFIC_OWNER: ${{ secrets.TRAFFIC_OWNER }}
-          TRAFFIC_REPO:  ${{ secrets.TRAFFIC_REPO }}
         run: python traffic_logger.py
 
       - name: Commit CSV to analytics branch
