@@ -2,7 +2,7 @@
 
 GitHub only keeps traffic data for 14 days. This workflow tracks the traffic of **all your repos** beyond the 14-day limit. It runs daily via GitHub Actions, logs everything to a CSV & keeps it forever; **without cluttering your main branch.**
 
-![visuals](assets/visuals.png) 
+<!-- ![visuals](assets/visuals.png)  -->
 ![visuals](assets/viz_.png)
 
 The best part, you just need one token and it auto-discovers all your repos. Set it up once in a dedicated repo and it tracks views & clones across your entire profile automatically.
