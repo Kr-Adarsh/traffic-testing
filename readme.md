@@ -32,7 +32,7 @@ The script figures out which repos have the right permissions and skips the rest
 
 Drop these files into your repo's **default branch** (or create a dedicated `traffic-tracker` repo):
 
-Direct files download: [Core files](https://github.com/Kr-Adarsh/git-traffic-log/releases/download/v2.0/git-traffic-logger.zip)
+Direct files download: [Core files](https://github.com/Kr-Adarsh/git-traffic-log/releases/download/v2.0/git-traffic-log.zip)
 
 Manually:
 
@@ -57,6 +57,8 @@ Go to **GitHub → Settings → Developer settings → Personal access tokens �
 
 > Classic tokens work too — just give it the `repo` scope.
 
+![create_token](assets/permission.png)
+
 ### 3. Add one secret
 
 Go to your repo → **Settings → Secrets and variables → Actions** → New repository secret:
@@ -67,7 +69,7 @@ Go to your repo → **Settings → Secrets and variables → Actions** → New r
 
 That's it. One secret. No username, no repo name — the script handles all of that.
 
-![secrets](assets/image-3.png)
+![secrets](assets/actionkey.png)
 
 ### 4. Run it once manually
 
