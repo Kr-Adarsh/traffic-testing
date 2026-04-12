@@ -1,6 +1,5 @@
 """
 traffic visualizer — interactive dashboard for your traffic_log.csv
-
 usage:
     python traffic_viz.py path/to/traffic_log.csv
 
@@ -693,24 +692,37 @@ function renderClones() {{
 
 function renderBar() {{
   const repos = [...selected].sort((a, b) => {{
-    return (REPO_DATA[a].views_total + REPO_DATA[a].clones_total) -
-           (REPO_DATA[b].views_total + REPO_DATA[b].clones_total);
+    const va = REPO_DATA[a].views_total || 0;
+    const vb = REPO_DATA[b].views_total || 0;
+    return vb - va;
   }});
   const names = repos.map(r => REPO_DATA[r].short);
-  const colors = repos.map(r => REPO_DATA[r].color);
+  const viewsVals = repos.map(r => REPO_DATA[r].views_total || 0);
+  const clonesVals = repos.map(r => REPO_DATA[r].clones_total || 0);
+
+  // Compute adaptive margins so labels and outside text are not clipped
+  const maxLabelChars = names.reduce((m, n) => Math.max(m, (n || '').length), 0);
+  const leftMargin = Math.min(320, 60 + maxLabelChars * 7);
+  const allVals = viewsVals.concat(clonesVals);
+  const maxValLen = allVals.length ? Math.max(...allVals.map(v => String(v).length)) : 1;
+  const rightMargin = Math.min(160, 30 + maxValLen * 10);
 
   const traces = [
     {{
-      y: names, x: repos.map(r => REPO_DATA[r].views_total),
+      y: names, x: viewsVals, text: viewsVals.map(v => v.toLocaleString()),
+      textposition: 'outside', textfont: {{ color: THEME.text, size: 10 }},
       name: 'Views', type: 'bar', orientation: 'h',
-      marker: {{ color: THEME.green, opacity: 0.8 }},
-      hovertemplate: '<b>%{{y}}</b><br>Views: %{{x:,}}<extra></extra>',
+      marker: {{ color: THEME.green, opacity: 0.85 }},
+      hovertemplate: '<b>%{{y}}</b><br>Views: %{{text}}<extra></extra>',
+      cliponaxis: false,
     }},
     {{
-      y: names, x: repos.map(r => REPO_DATA[r].clones_total),
+      y: names, x: clonesVals, text: clonesVals.map(v => v.toLocaleString()),
+      textposition: 'outside', textfont: {{ color: THEME.text, size: 10 }},
       name: 'Clones', type: 'bar', orientation: 'h',
-      marker: {{ color: THEME.purple, opacity: 0.8 }},
-      hovertemplate: '<b>%{{y}}</b><br>Clones: %{{x:,}}<extra></extra>',
+      marker: {{ color: THEME.purple, opacity: 0.85 }},
+      hovertemplate: '<b>%{{y}}</b><br>Clones: %{{text}}<extra></extra>',
+      cliponaxis: false,
     }},
   ];
   const h = Math.max(200, repos.length * 28 + 60);
@@ -727,13 +739,16 @@ function renderBar() {{
     yaxis: {{
       ...CHART_LAYOUT.yaxis,
       automargin: true,
+      autorange: 'reversed',
       tickfont: {{ color: THEME.sub, size: 10, family: "'JetBrains Mono', monospace" }},
     }},
     xaxis: {{
       ...CHART_LAYOUT.xaxis,
+      type: 'linear',
+      tickformat: ',',
       title: {{ text: 'Count', font: {{ color: THEME.muted, size: 10 }} }},
     }},
-    margin: {{ t: 30, b: 40, l: 10, r: 20 }},
+    margin: {{ t: 30, b: 40, l: leftMargin, r: rightMargin }},
   }};
   Plotly.react('chartBar', traces, layout, PLOTLY_CONFIG);
 }}
@@ -747,7 +762,13 @@ function renderDonut() {{
   const traces = [{{
     labels: ['Views', 'Clones'],
     values: [views, clones],
-    type: 'pie', hole: 0.65,
+    type: 'pie',
+    // slightly smaller hole so percent labels fit inside the ring
+    hole: 0.55,
+    // show percent labels inside the donut for clarity
+    textinfo: 'percent',
+    textposition: 'inside',
+    insidetextfont: {{ color: THEME.text, family: "'JetBrains Mono', monospace", size: 13 }},
     marker: {{
       colors: [THEME.green, THEME.purple],
       line: {{ color: THEME.bg, width: 3 }},
